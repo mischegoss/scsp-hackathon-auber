@@ -1,4 +1,106 @@
 import React, { useState } from 'react'
+import { addNeighborData } from './utils/add-neighbor-data.js'
+
+// Location data - can be easily updated here
+const locationsData = {
+  locations: [
+    {
+      id: 1,
+      name: 'Wheeling Clinic',
+      address: '16th Street, Wheeling, WV',
+      phone: '(304) 234-3654',
+      hours: 'Mon-Fri 8AM-5PM',
+      type: 'distribution',
+      status: 'available',
+      available_stock: 8,
+      expiring_soon: 2,
+      mapLink:
+        'https://www.google.com/maps/place/Wheeling+Clinic/@40.0639825,-80.7217169,17z/data=!3m2!4b1!5s0x8835da2a282f8811:0xc6a12e626ad84b58!4m6!3m5!1s0x8835da2a28514ad3:0xbba1498958861db4!8m2!3d40.0639784!4d-80.719142!16s%2Fg%2F1tf71lh0?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
+      note: null,
+    },
+    {
+      id: 2,
+      name: 'Ohio County Health Dept',
+      address: '2000 Eoff St, Wheeling, WV',
+      phone: '(304) 234-3677',
+      hours: 'Mon-Fri 9AM-4PM',
+      type: 'distribution',
+      status: 'low',
+      available_stock: 3,
+      expiring_soon: 1,
+      mapLink:
+        'https://www.google.com/maps/search/ohio+county+health+department/@40.0670118,-80.7235813,17z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
+      note: null,
+    },
+    {
+      id: 3,
+      name: 'Elm Grove Pharmacy',
+      address: '88 Bethlehem Blvd, Elm Grove, WV',
+      phone: '(304) 242-3456',
+      hours: 'Mon-Sat 9AM-7PM',
+      type: 'distribution',
+      status: 'out',
+      available_stock: 0,
+      expiring_soon: 0,
+      mapLink:
+        'https://www.google.com/maps/place/Elm+Grove+Pharmacy/@40.0434121,-80.6614629,17z/data=!3m1!4b1!4m6!3m5!1s0x8835db0bf2f7367f:0x2bcf272dab758297!8m2!3d40.043408!4d-80.658888!16s%2Fg%2F1thmlnfc?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
+      note: 'Not a free resource (average $50)',
+    },
+    {
+      id: 4,
+      name: 'Valley Grove Community Center',
+      address: 'National Road, Valley Grove, WV',
+      phone: '(304) 547-8900',
+      hours: 'Tue/Thu 10AM-2PM',
+      type: 'distribution',
+      status: 'out',
+      available_stock: 0,
+      expiring_soon: 0,
+      mapLink:
+        'https://www.google.com/maps/place/VALLEY+GROVE+COMMUNITY+CENTER/@40.0871424,-80.5756664,17z/data=!3m1!4b1!4m6!3m5!1s0x8835c58a0f100001:0xca6d8c40df984a01!8m2!3d40.0871384!4d-80.5707955!16s%2Fg%2F11qmn3_4rx?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
+      note: null,
+    },
+    {
+      id: 5,
+      name: 'Wheeling Hospital',
+      address: '1 Medical Park, Wheeling, WV',
+      phone: '(304) 243-3000',
+      hours: '2nd Saturday each month, 10AM',
+      type: 'training',
+      status: 'available',
+      available_stock: 6,
+      expiring_soon: 3,
+      mapLink:
+        'https://www.google.com/maps/place/WVU+Wheeling+Hospital/@40.0591683,-80.6873961,17z/data=!3m2!4b1!5s0x8835da53cf5c7629:0x6caeea254ef7e936!4m6!3m5!1s0x8835da53b296190b:0x81824be535f5feb2!8m2!3d40.0591642!4d-80.6848212!16s%2Fg%2F1tc_rn_7?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
+      note: 'Enter through Emergency Department',
+    },
+    {
+      id: 6,
+      name: 'Ohio County EMS',
+      address: '1845 National Rd, Wheeling, WV',
+      phone: '(304) 243-4050',
+      hours: 'Monthly training - call to schedule',
+      type: 'training',
+      status: 'available',
+      available_stock: 10,
+      expiring_soon: 0,
+      mapLink:
+        'https://www.google.com/maps/place/Ohio+County+Homeland+Security+and+Emergency+Management+Agency/@40.0647531,-80.7230829,17z/data=!3m1!4b1!4m6!3m5!1s0x8835da29f1c351c5:0xbbabb18332d4d10!8m2!3d40.064749!4d-80.720508!16s%2Fg%2F1263yyp8j?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
+      note: null,
+    },
+  ],
+  metadata: {
+    county: 'Ohio County',
+    state: 'West Virginia',
+    stateAbbr: 'WV',
+    lastUpdated: '2025-06-03',
+    totalLocations: 6,
+    distributionCenters: 4,
+    trainingFacilities: 2,
+    totalStock: 27,
+    totalExpiringSoon: 6,
+  },
+}
 
 const NeighborForm = () => {
   const [needsNarcan, setNeedsNarcan] = useState(false)
@@ -6,9 +108,16 @@ const NeighborForm = () => {
   const [urgency, setUrgency] = useState('')
   const [zipCode, setZipCode] = useState('')
   const [showResults, setShowResults] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const [locations] = useState(locationsData.locations)
+  const [metadata] = useState(locationsData.metadata)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if ((needsNarcan || needsTraining) && urgency && zipCode) {
+      setIsSubmitting(true)
+      setSubmitError('')
+
       const data = {
         needs: [
           ...(needsNarcan ? ['narcan-access'] : []),
@@ -19,8 +128,20 @@ const NeighborForm = () => {
         zipCode,
         timestamp: new Date().toISOString(),
       }
-      console.log('Form submitted:', data)
-      setShowResults(true)
+
+      try {
+        // Save the data using our utility
+        await addNeighborData(data)
+        console.log('Form submitted and saved successfully:', data)
+        setShowResults(true)
+      } catch (error) {
+        console.error('Error saving neighbor data:', error)
+        setSubmitError(
+          'There was an error validating your request. Please check the form and try again.',
+        )
+      } finally {
+        setIsSubmitting(false)
+      }
     }
   }
 
@@ -31,81 +152,6 @@ const NeighborForm = () => {
     { value: '26060', label: '26060 - Valley Grove' },
     { value: '26074', label: '26074 - Warwood' },
     { value: 'prefer-not', label: 'Prefer not to answer' },
-  ]
-
-  const locations = [
-    {
-      name: 'Wheeling Clinic',
-      address: '16th Street, Wheeling, WV',
-      phone: '(304) 234-3654',
-      hours: 'Mon-Fri 8AM-5PM',
-      type: 'distribution',
-      status: 'available',
-      id: 1,
-      mapLink:
-        'https://www.google.com/maps/place/Wheeling+Clinic/@40.0639825,-80.7217169,17z/data=!3m2!4b1!5s0x8835da2a282f8811:0xc6a12e626ad84b58!4m6!3m5!1s0x8835da2a28514ad3:0xbba1498958861db4!8m2!3d40.0639784!4d-80.719142!16s%2Fg%2F1tf71lh0?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
-      note: null,
-    },
-    {
-      name: 'Ohio County Health Dept',
-      address: '2000 Eoff St, Wheeling, WV',
-      phone: '(304) 234-3677',
-      hours: 'Mon-Fri 9AM-4PM',
-      type: 'distribution',
-      status: 'low',
-      id: 2,
-      mapLink:
-        'https://www.google.com/maps/search/ohio+county+health+department/@40.0670118,-80.7235813,17z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
-      note: null,
-    },
-    {
-      name: 'Elm Grove Pharmacy',
-      address: '88 Bethlehem Blvd, Elm Grove, WV',
-      phone: '(304) 242-3456',
-      hours: 'Mon-Sat 9AM-7PM',
-      type: 'distribution',
-      status: 'out',
-      id: 3,
-      mapLink:
-        'https://www.google.com/maps/place/Elm+Grove+Pharmacy/@40.0434121,-80.6614629,17z/data=!3m1!4b1!4m6!3m5!1s0x8835db0bf2f7367f:0x2bcf272dab758297!8m2!3d40.043408!4d-80.658888!16s%2Fg%2F1thmlnfc?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
-      note: 'Not a free resource (average $50)',
-    },
-    {
-      name: 'Valley Grove Community Center',
-      address: 'National Road, Valley Grove, WV',
-      phone: '(304) 547-8900',
-      hours: 'Tue/Thu 10AM-2PM',
-      type: 'distribution',
-      status: 'out',
-      id: 4,
-      mapLink:
-        'https://www.google.com/maps/place/VALLEY+GROVE+COMMUNITY+CENTER/@40.0871424,-80.5756664,17z/data=!3m1!4b1!4m6!3m5!1s0x8835c58a0f100001:0xca6d8c40df984a01!8m2!3d40.0871384!4d-80.5707955!16s%2Fg%2F11qmn3_4rx?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
-      note: null,
-    },
-    {
-      name: 'Wheeling Hospital',
-      address: '1 Medical Park, Wheeling, WV',
-      phone: '(304) 243-3000',
-      hours: '2nd Saturday each month, 10AM',
-      type: 'training',
-      status: 'available',
-      id: 5,
-      mapLink:
-        'https://www.google.com/maps/place/WVU+Wheeling+Hospital/@40.0591683,-80.6873961,17z/data=!3m2!4b1!5s0x8835da53cf5c7629:0x6caeea254ef7e936!4m6!3m5!1s0x8835da53b296190b:0x81824be535f5feb2!8m2!3d40.0591642!4d-80.6848212!16s%2Fg%2F1tc_rn_7?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
-      note: 'Enter through Emergency Department',
-    },
-    {
-      name: 'Ohio County EMS',
-      address: '1845 National Rd, Wheeling, WV',
-      phone: '(304) 243-4050',
-      hours: 'Monthly training - call to schedule',
-      type: 'training',
-      status: 'available',
-      id: 6,
-      mapLink:
-        'https://www.google.com/maps/place/Ohio+County+Homeland+Security+and+Emergency+Management+Agency/@40.0647531,-80.7230829,17z/data=!3m1!4b1!4m6!3m5!1s0x8835da29f1c351c5:0xbbabb18332d4d10!8m2!3d40.064749!4d-80.720508!16s%2Fg%2F1263yyp8j?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
-      note: null,
-    },
   ]
 
   if (showResults) {
@@ -134,26 +180,9 @@ const NeighborForm = () => {
             }}
           >
             <h2 style={{ color: '#002855', margin: 0, fontSize: '2rem' }}>
-              Resources in Ohio County, WV
+              Resources in {metadata.county}, {metadata.stateAbbr}
             </h2>
-            <button
-              onClick={() => setShowResults(false)}
-              style={{
-                backgroundColor: '#FFD700',
-                color: '#002855',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '6px',
-                fontSize: '1rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                marginTop: '1rem',
-              }}
-            >
-              ← Back to form
-            </button>
           </div>
-
           {/* Map Section */}
           <div style={{ marginBottom: '2rem' }}>
             <h2
@@ -167,7 +196,7 @@ const NeighborForm = () => {
                 gap: '10px',
               }}
             >
-              📍 Locations in Ohio County, WV
+              📍 Locations in {metadata.county}, {metadata.stateAbbr}
             </h2>
 
             {/* Map Area */}
@@ -194,7 +223,7 @@ const NeighborForm = () => {
                   fontWeight: '600',
                 }}
               >
-                Ohio County, West Virginia
+                {metadata.county}, {metadata.state}
               </h3>
               <p
                 style={{
@@ -205,8 +234,10 @@ const NeighborForm = () => {
                   lineHeight: '1.4',
                 }}
               >
-                6 locations tracked:
-                <br />4 Narcan Distribution Centers • 2 Training Facilities
+                {metadata.totalLocations} locations tracked:
+                <br />
+                {metadata.distributionCenters} Narcan Distribution Centers •{' '}
+                {metadata.trainingFacilities} Training Facilities
               </p>
 
               {/* Map overlay with info */}
@@ -223,7 +254,8 @@ const NeighborForm = () => {
                   fontWeight: '500',
                 }}
               >
-                📍 {locations.length} Locations • Ohio County, WV
+                📍 {metadata.totalLocations} Locations • {metadata.county},{' '}
+                {metadata.stateAbbr}
               </div>
             </div>
 
@@ -344,7 +376,6 @@ const NeighborForm = () => {
               </div>
             </div>
           </div>
-
           {/* Location Cards */}
           <div
             style={{
@@ -354,7 +385,7 @@ const NeighborForm = () => {
               marginBottom: '2rem',
             }}
           >
-            {locations.map((location, index) => {
+            {locations.map(location => {
               const getStatusColor = status => {
                 switch (status) {
                   case 'available':
@@ -398,7 +429,7 @@ const NeighborForm = () => {
 
               return (
                 <div
-                  key={index}
+                  key={location.id}
                   style={{
                     padding: '2rem',
                     borderRadius: '8px',
@@ -595,7 +626,6 @@ const NeighborForm = () => {
               )
             })}
           </div>
-
           {/* Emergency Section */}
           <div
             style={{
@@ -681,6 +711,25 @@ const NeighborForm = () => {
                 </p>
               </div>
             </div>
+          </div>
+          {/* Back to form button at bottom */}
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <button
+              onClick={() => setShowResults(false)}
+              style={{
+                backgroundColor: '#002855',
+                color: 'white',
+                border: 'none',
+                padding: '1rem 2rem',
+                borderRadius: '8px',
+                fontSize: '1.125rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              }}
+            >
+              ← Submit Another Request
+            </button>
           </div>
         </div>
       </div>
@@ -894,13 +943,38 @@ const NeighborForm = () => {
           </select>
         </div>
 
+        {/* Error message */}
+        {submitError && (
+          <div
+            style={{
+              backgroundColor: '#f8d7da',
+              border: '1px solid #f5c6cb',
+              color: '#721c24',
+              padding: '1rem',
+              borderRadius: '6px',
+              marginBottom: '1rem',
+              fontSize: '1rem',
+            }}
+          >
+            {submitError}
+          </div>
+        )}
+
         <button
           onClick={handleSubmit}
-          disabled={!(needsNarcan || needsTraining) || !urgency || !zipCode}
+          disabled={
+            !(needsNarcan || needsTraining) ||
+            !urgency ||
+            !zipCode ||
+            isSubmitting
+          }
           style={{
             width: '100%',
             backgroundColor:
-              (needsNarcan || needsTraining) && urgency && zipCode
+              (needsNarcan || needsTraining) &&
+              urgency &&
+              zipCode &&
+              !isSubmitting
                 ? '#002855'
                 : '#6c757d',
             color: 'white',
@@ -910,17 +984,20 @@ const NeighborForm = () => {
             fontSize: '1.125rem',
             fontWeight: '500',
             cursor:
-              (needsNarcan || needsTraining) && urgency && zipCode
+              (needsNarcan || needsTraining) &&
+              urgency &&
+              zipCode &&
+              !isSubmitting
                 ? 'pointer'
                 : 'not-allowed',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           }}
         >
-          Find Available Resources
+          {isSubmitting ? 'Saving...' : 'Find Available Resources'}
         </button>
       </div>
     </div>
   )
 }
 
-export default NeighborForm
+export default NeighborForm;
