@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { addNeighborData } from './utils/add-neighbor-data.js'
+import VerifySection from './VerifySection.jsx'
 
 // Location data - can be easily updated here
+
 const locationsData = {
   locations: [
     {
@@ -14,6 +16,7 @@ const locationsData = {
       status: 'available',
       available_stock: 8,
       expiring_soon: 2,
+      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/Wheeling+Clinic/@40.0639825,-80.7217169,17z/data=!3m2!4b1!5s0x8835da2a282f8811:0xc6a12e626ad84b58!4m6!3m5!1s0x8835da2a28514ad3:0xbba1498958861db4!8m2!3d40.0639784!4d-80.719142!16s%2Fg%2F1tf71lh0?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -28,6 +31,7 @@ const locationsData = {
       status: 'low',
       available_stock: 3,
       expiring_soon: 1,
+      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/search/ohio+county+health+department/@40.0670118,-80.7235813,17z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -42,6 +46,7 @@ const locationsData = {
       status: 'out',
       available_stock: 0,
       expiring_soon: 0,
+      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/Elm+Grove+Pharmacy/@40.0434121,-80.6614629,17z/data=!3m1!4b1!4m6!3m5!1s0x8835db0bf2f7367f:0x2bcf272dab758297!8m2!3d40.043408!4d-80.658888!16s%2Fg%2F1thmlnfc?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: 'Not a free resource (average $50)',
@@ -56,6 +61,7 @@ const locationsData = {
       status: 'out',
       available_stock: 0,
       expiring_soon: 0,
+      zipCode: '26060',
       mapLink:
         'https://www.google.com/maps/place/VALLEY+GROVE+COMMUNITY+CENTER/@40.0871424,-80.5756664,17z/data=!3m1!4b1!4m6!3m5!1s0x8835c58a0f100001:0xca6d8c40df984a01!8m2!3d40.0871384!4d-80.5707955!16s%2Fg%2F11qmn3_4rx?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -70,6 +76,7 @@ const locationsData = {
       status: 'available',
       available_stock: 6,
       expiring_soon: 3,
+      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/WVU+Wheeling+Hospital/@40.0591683,-80.6873961,17z/data=!3m2!4b1!5s0x8835da53cf5c7629:0x6caeea254ef7e936!4m6!3m5!1s0x8835da53b296190b:0x81824be535f5feb2!8m2!3d40.0591642!4d-80.6848212!16s%2Fg%2F1tc_rn_7?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: 'Enter through Emergency Department',
@@ -84,6 +91,7 @@ const locationsData = {
       status: 'available',
       available_stock: 10,
       expiring_soon: 0,
+      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/Ohio+County+Homeland+Security+and+Emergency+Management+Agency/@40.0647531,-80.7230829,17z/data=!3m1!4b1!4m6!3m5!1s0x8835da29f1c351c5:0xbbabb18332d4d10!8m2!3d40.064749!4d-80.720508!16s%2Fg%2F1263yyp8j?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -183,6 +191,14 @@ const NeighborForm = () => {
               Resources in {metadata.county}, {metadata.stateAbbr}
             </h2>
           </div>
+          {/* Verification Section */}
+          <VerifySection
+            needsNarcan={needsNarcan}
+            needsTraining={needsTraining}
+            urgency={urgency}
+            zipCode={zipCode}
+            locations={locations}
+          />
           {/* Map Section */}
           <div style={{ marginBottom: '2rem' }}>
             <h2

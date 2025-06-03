@@ -101,7 +101,7 @@ const locationsData = {
   },
 }
 
-const ProviderForm = () => {
+const CommunityForm = () => {
   const [selectedLocationId, setSelectedLocationId] = useState('')
   const [availableStock, setAvailableStock] = useState('')
   const [expiringSoon, setExpiringSoon] = useState('')
@@ -431,7 +431,7 @@ const ProviderForm = () => {
               }
 
               const getStatusText = (status, type) => {
-                if (type === 'training') return 'Training Available'
+                // Always prioritize stock status over training
                 switch (status) {
                   case 'available':
                     return 'Narcan Available'
@@ -445,7 +445,7 @@ const ProviderForm = () => {
               }
 
               const getStatusIcon = (status, type) => {
-                if (type === 'training') return '🎓'
+                // Always prioritize stock status over training
                 switch (status) {
                   case 'available':
                     return '✓'
@@ -726,70 +726,72 @@ const ProviderForm = () => {
                       </span>
                     </div>
 
-                    {/* Stock Information for all locations */}
-                    <div
-                      style={{
-                        backgroundColor: '#f8f9fa',
-                        border: '1px solid #dee2e6',
-                        borderRadius: '6px',
-                        padding: '12px',
-                        marginBottom: location.note ? '14px' : '0',
-                      }}
-                    >
+                    {/* Stock Information for all locations except my location */}
+                    {!isMyLocation && (
                       <div
                         style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '12px',
+                          backgroundColor: '#f8f9fa',
+                          border: '1px solid #dee2e6',
+                          borderRadius: '6px',
+                          padding: '12px',
+                          marginBottom: location.note ? '14px' : '0',
                         }}
                       >
-                        <div>
-                          <span
-                            style={{
-                              color: '#6c757d',
-                              fontSize: '0.875rem',
-                              fontWeight: '500',
-                              display: 'block',
-                            }}
-                          >
-                            📦 Available:
-                          </span>
-                          <div
-                            style={{
-                              color: '#002855',
-                              fontSize: '1.25rem',
-                              fontWeight: '600',
-                            }}
-                          >
-                            {location.available_stock}
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '12px',
+                          }}
+                        >
+                          <div>
+                            <span
+                              style={{
+                                color: '#6c757d',
+                                fontSize: '0.875rem',
+                                fontWeight: '500',
+                                display: 'block',
+                              }}
+                            >
+                              📦 Available:
+                            </span>
+                            <div
+                              style={{
+                                color: '#002855',
+                                fontSize: '1.25rem',
+                                fontWeight: '600',
+                              }}
+                            >
+                              {location.available_stock}
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          <span
-                            style={{
-                              color: '#6c757d',
-                              fontSize: '0.875rem',
-                              fontWeight: '500',
-                              display: 'block',
-                            }}
-                          >
-                            ⚠️ Expiring:
-                          </span>
-                          <div
-                            style={{
-                              color:
-                                location.expiring_soon > 0
-                                  ? '#dc3545'
-                                  : '#6c757d',
-                              fontSize: '1.25rem',
-                              fontWeight: '600',
-                            }}
-                          >
-                            {location.expiring_soon}
+                          <div>
+                            <span
+                              style={{
+                                color: '#6c757d',
+                                fontSize: '0.875rem',
+                                fontWeight: '500',
+                                display: 'block',
+                              }}
+                            >
+                              ⚠️ Expiring:
+                            </span>
+                            <div
+                              style={{
+                                color:
+                                  location.expiring_soon > 0
+                                    ? '#dc3545'
+                                    : '#6c757d',
+                                fontSize: '1.25rem',
+                                fontWeight: '600',
+                              }}
+                            >
+                              {location.expiring_soon}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     {location.note && (
                       <div
@@ -1125,4 +1127,4 @@ const ProviderForm = () => {
   )
 }
 
-export default ProviderForm
+export default CommunityForm;
