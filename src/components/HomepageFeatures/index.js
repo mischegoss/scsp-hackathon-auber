@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import Link from '@docusaurus/Link'
 import Heading from '@theme/Heading'
 import styles from './styles.module.css'
 
@@ -6,6 +7,7 @@ const FeatureList = [
   {
     title: 'Neighborhood Connect - Get Narcan',
     Image: require('@site/static/img/neighbor.png').default,
+    link: '/neighbor-connect',
     description: (
       <>
         Find free or low-cost Narcan for your home and learn how to use it to
@@ -16,6 +18,7 @@ const FeatureList = [
   {
     title: 'Community Connect - Provider Resources',
     Image: require('@site/static/img/community.png').default,
+    link: '/',
     description: (
       <>
         Organizations can request Narcan supplies, report distribution needs,
@@ -26,6 +29,7 @@ const FeatureList = [
   {
     title: 'Leaders Connect - Get Insights to Save Lives',
     Image: require('@site/static/img/leader2.png').default,
+    link: '/',
     description: (
       <>
         Data-driven insights help public health leaders make smarter decisions
@@ -35,23 +39,50 @@ const FeatureList = [
   },
 ]
 
-function Feature({ Image, title, description }) {
+function Feature({ Image, title, description, link }) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className='text--center'>
-        <img src={Image} alt={title} className={styles.featureImage} />
-      </div>
-      <div className='text--center padding-horiz--md'>
-        <Heading as='h3'>{title}</Heading>
-        <p>{description}</p>
-      </div>
+    <div className={clsx('col col--4')} style={{ marginBottom: '2rem' }}>
+      <Link
+        to={link}
+        style={{
+          display: 'block',
+          textDecoration: 'none',
+          color: 'inherit',
+          backgroundColor: '#f8f9fa',
+          border: '1px solid #dee2e6',
+          borderRadius: '0.5rem',
+          padding: '1.5rem 1rem',
+          boxShadow: '0 4px 6px rgba(0, 40, 85, 0.1)',
+          transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 40, 85, 0.15)'
+          e.currentTarget.style.transform = 'translateY(-4px)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 40, 85, 0.1)'
+          e.currentTarget.style.transform = 'translateY(0)'
+        }}
+      >
+        <div className='text--center'>
+          <img
+            src={Image}
+            alt={title}
+            style={{ maxWidth: '100%', height: 'auto' }}
+          />
+        </div>
+        <div className='text--center padding-horiz--md'>
+          <Heading as='h3'>{title}</Heading>
+          <p>{description}</p>
+        </div>
+      </Link>
     </div>
   )
 }
 
 export default function HomepageFeatures() {
   return (
-    <section className={styles.features}>
+    <section style={{ padding: '2rem 0' }}>
       <div className='container'>
         <div className='row'>
           {FeatureList.map((props, idx) => (
@@ -62,3 +93,4 @@ export default function HomepageFeatures() {
     </section>
   )
 }
+

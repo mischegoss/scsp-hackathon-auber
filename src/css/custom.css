@@ -5,26 +5,39 @@
  */
 
 /* You can override the default Infima variables here. */
+
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #002855; /* wv-navy */
+  --ifm-color-primary-dark: #001f47; /* darker shade of wv-navy */
+  --ifm-color-primary-darker: #001a3a; /* even darker */
+  --ifm-color-primary-darkest: #00142e;
+  --ifm-color-primary-light: #1a4780; /* wv-light-navy */
+  --ifm-color-primary-lighter: #335b8f; /* lighter variant */
+  --ifm-color-primary-lightest: #4c6f9e;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(
+    0,
+    40,
+    85,
+    0.1
+  ); /* uses wv-navy base */
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #ffd700; /* wv-gold */
+  --ifm-color-primary-dark: #e6c200; /* wv-dark-gold */
+  --ifm-color-primary-darker: #ccae00;
+  --ifm-color-primary-darkest: #b39900;
+  --ifm-color-primary-light: #ffdb33;
+  --ifm-color-primary-lighter: #ffe066;
+  --ifm-color-primary-lightest: #fff099;
+  --docusaurus-highlighted-code-line-bg: rgba(
+    255,
+    215,
+    0,
+    0.2
+  ); /* transparent wv-gold */
 }
+
+/* Leaflet CSS override: Ensure leaflet/dist/leaflet.css is imported */ ;
