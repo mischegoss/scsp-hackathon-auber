@@ -18,7 +18,7 @@ const FeatureList = [
   {
     title: 'Provider Connect - Get Connected and Track Narcan Supplies',
     Image: require('@site/static/img/community.png').default,
-    link: '/',
+    link: '/provider-connect',
     description: (
       <>
         Track Narcan supplies and view other providers in the area to ensure Narcan gets where is is needed the most.
@@ -26,9 +26,9 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Leaders Connect - Get Insights to Save Lives',
+    title: 'Leaders Connect - Get Data Insights to Save Lives',
     Image: require('@site/static/img/leader2.png').default,
-    link: '/',
+    link: '/data-connect',
     description: (
       <>
         Discover the data-driven insights to make smarter decisions
