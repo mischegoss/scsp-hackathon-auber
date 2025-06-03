@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
-import { addNeighborData } from './utils/add-neighbor-data.js'
-import VerifySection from './VerifySection.jsx'
 
 // Location data - can be easily updated here
-
 const locationsData = {
   locations: [
     {
@@ -16,7 +13,6 @@ const locationsData = {
       status: 'available',
       available_stock: 8,
       expiring_soon: 2,
-      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/Wheeling+Clinic/@40.0639825,-80.7217169,17z/data=!3m2!4b1!5s0x8835da2a282f8811:0xc6a12e626ad84b58!4m6!3m5!1s0x8835da2a28514ad3:0xbba1498958861db4!8m2!3d40.0639784!4d-80.719142!16s%2Fg%2F1tf71lh0?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -31,7 +27,6 @@ const locationsData = {
       status: 'low',
       available_stock: 3,
       expiring_soon: 1,
-      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/search/ohio+county+health+department/@40.0670118,-80.7235813,17z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -46,7 +41,6 @@ const locationsData = {
       status: 'out',
       available_stock: 0,
       expiring_soon: 0,
-      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/Elm+Grove+Pharmacy/@40.0434121,-80.6614629,17z/data=!3m1!4b1!4m6!3m5!1s0x8835db0bf2f7367f:0x2bcf272dab758297!8m2!3d40.043408!4d-80.658888!16s%2Fg%2F1thmlnfc?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: 'Not a free resource (average $50)',
@@ -61,7 +55,6 @@ const locationsData = {
       status: 'out',
       available_stock: 0,
       expiring_soon: 0,
-      zipCode: '26060',
       mapLink:
         'https://www.google.com/maps/place/VALLEY+GROVE+COMMUNITY+CENTER/@40.0871424,-80.5756664,17z/data=!3m1!4b1!4m6!3m5!1s0x8835c58a0f100001:0xca6d8c40df984a01!8m2!3d40.0871384!4d-80.5707955!16s%2Fg%2F11qmn3_4rx?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -76,7 +69,6 @@ const locationsData = {
       status: 'available',
       available_stock: 6,
       expiring_soon: 3,
-      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/WVU+Wheeling+Hospital/@40.0591683,-80.6873961,17z/data=!3m2!4b1!5s0x8835da53cf5c7629:0x6caeea254ef7e936!4m6!3m5!1s0x8835da53b296190b:0x81824be535f5feb2!8m2!3d40.0591642!4d-80.6848212!16s%2Fg%2F1tc_rn_7?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: 'Enter through Emergency Department',
@@ -91,7 +83,6 @@ const locationsData = {
       status: 'available',
       available_stock: 10,
       expiring_soon: 0,
-      zipCode: '26003',
       mapLink:
         'https://www.google.com/maps/place/Ohio+County+Homeland+Security+and+Emergency+Management+Agency/@40.0647531,-80.7230829,17z/data=!3m1!4b1!4m6!3m5!1s0x8835da29f1c351c5:0xbbabb18332d4d10!8m2!3d40.064749!4d-80.720508!16s%2Fg%2F1263yyp8j?entry=ttu&g_ep=EgoyMDI1MDUyOC4wIKXMDSoASAFQAw%3D%3D',
       note: null,
@@ -110,57 +101,75 @@ const locationsData = {
   },
 }
 
-const NeighborForm = () => {
-  const [needsNarcan, setNeedsNarcan] = useState(false)
-  const [needsTraining, setNeedsTraining] = useState(false)
-  const [urgency, setUrgency] = useState('')
-  const [zipCode, setZipCode] = useState('')
+const CommunityForm = () => {
+  const [selectedLocationId, setSelectedLocationId] = useState('')
+  const [availableStock, setAvailableStock] = useState('')
+  const [expiringSoon, setExpiringSoon] = useState('')
   const [showResults, setShowResults] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
-  const [locations] = useState(locationsData.locations)
+  const [locations, setLocations] = useState(locationsData.locations)
   const [metadata] = useState(locationsData.metadata)
+  const [myLocationId, setMyLocationId] = useState(null)
+
+  // Function to update location stock
+  const updateLocationStock = (
+    locationId,
+    newAvailableStock,
+    newExpiringSoon,
+  ) => {
+    const updatedLocations = locations.map(location => {
+      if (location.id === parseInt(locationId)) {
+        const updatedLocation = {
+          ...location,
+          available_stock: parseInt(newAvailableStock) || 0,
+          expiring_soon: parseInt(newExpiringSoon) || 0,
+        }
+
+        // Update status based on stock
+        if (updatedLocation.available_stock === 0) {
+          updatedLocation.status = 'out'
+        } else if (updatedLocation.available_stock <= 3) {
+          updatedLocation.status = 'low'
+        } else {
+          updatedLocation.status = 'available'
+        }
+
+        return updatedLocation
+      }
+      return location
+    })
+
+    setLocations(updatedLocations)
+  }
 
   const handleSubmit = async () => {
-    if ((needsNarcan || needsTraining) && urgency && zipCode) {
+    if (selectedLocationId && availableStock !== '' && expiringSoon !== '') {
       setIsSubmitting(true)
       setSubmitError('')
 
-      const data = {
-        needs: [
-          ...(needsNarcan ? ['narcan-access'] : []),
-          ...(needsTraining ? ['narcan-training'] : []),
-        ],
-        urgency:
-          urgency === 'planning-ahead' ? 1 : urgency === 'needed-soon' ? 3 : 5,
-        zipCode,
-        timestamp: new Date().toISOString(),
-      }
-
       try {
-        // Save the data using our utility
-        await addNeighborData(data)
-        console.log('Form submitted and saved successfully:', data)
+        // Update the location stock
+        updateLocationStock(selectedLocationId, availableStock, expiringSoon)
+
+        // Set this as their location for highlighting
+        setMyLocationId(parseInt(selectedLocationId))
+
+        console.log(
+          'Stock updated successfully for location:',
+          selectedLocationId,
+        )
         setShowResults(true)
       } catch (error) {
-        console.error('Error saving neighbor data:', error)
+        console.error('Error updating stock:', error)
         setSubmitError(
-          'There was an error validating your request. Please check the form and try again.',
+          'There was an error updating your stock information. Please try again.',
         )
       } finally {
         setIsSubmitting(false)
       }
     }
   }
-
-  const zipOptions = [
-    { value: '', label: 'Select your zip code' },
-    { value: '26003', label: '26003 - Wheeling' },
-    { value: '26059', label: '26059 - Elm Grove' },
-    { value: '26060', label: '26060 - Valley Grove' },
-    { value: '26074', label: '26074 - Warwood' },
-    { value: 'prefer-not', label: 'Prefer not to answer' },
-  ]
 
   if (showResults) {
     return (
@@ -190,15 +199,18 @@ const NeighborForm = () => {
             <h2 style={{ color: '#002855', margin: 0, fontSize: '2rem' }}>
               Resources in {metadata.county}, {metadata.stateAbbr}
             </h2>
+            <p
+              style={{
+                color: '#28a745',
+                fontSize: '1.125rem',
+                margin: '0.5rem 0 0 0',
+                fontWeight: '600',
+              }}
+            >
+              ✅ Your stock information has been updated successfully!
+            </p>
           </div>
-          {/* Verification Section */}
-          <VerifySection
-            needsNarcan={needsNarcan}
-            needsTraining={needsTraining}
-            urgency={urgency}
-            zipCode={zipCode}
-            locations={locations}
-          />
+
           {/* Map Section */}
           <div style={{ marginBottom: '2rem' }}>
             <h2
@@ -392,6 +404,7 @@ const NeighborForm = () => {
               </div>
             </div>
           </div>
+
           {/* Location Cards */}
           <div
             style={{
@@ -402,6 +415,8 @@ const NeighborForm = () => {
             }}
           >
             {locations.map(location => {
+              const isMyLocation = location.id === myLocationId
+
               const getStatusColor = status => {
                 switch (status) {
                   case 'available':
@@ -416,7 +431,7 @@ const NeighborForm = () => {
               }
 
               const getStatusText = (status, type) => {
-                if (type === 'training') return 'Training Available'
+                // Always prioritize stock status over training
                 switch (status) {
                   case 'available':
                     return 'Narcan Available'
@@ -430,7 +445,7 @@ const NeighborForm = () => {
               }
 
               const getStatusIcon = (status, type) => {
-                if (type === 'training') return '🎓'
+                // Always prioritize stock status over training
                 switch (status) {
                   case 'available':
                     return '✓'
@@ -449,21 +464,25 @@ const NeighborForm = () => {
                   style={{
                     padding: '2rem',
                     borderRadius: '8px',
-                    border: `2px solid ${
-                      location.type === 'training'
-                        ? '#002855'
-                        : getStatusColor(location.status)
-                    }`,
-                    backgroundColor:
-                      location.type === 'training'
-                        ? 'rgba(0, 40, 85, 0.03)'
-                        : location.status === 'available'
-                        ? 'rgba(40, 167, 69, 0.03)'
-                        : location.status === 'low'
-                        ? 'rgba(255, 193, 7, 0.03)'
-                        : 'rgba(220, 53, 69, 0.03)',
+                    border: isMyLocation
+                      ? '3px solid #FFD700'
+                      : `2px solid ${
+                          location.type === 'training'
+                            ? '#002855'
+                            : getStatusColor(location.status)
+                        }`,
+                    backgroundColor: isMyLocation
+                      ? 'rgba(255, 215, 0, 0.08)'
+                      : location.type === 'training'
+                      ? 'rgba(0, 40, 85, 0.03)'
+                      : location.status === 'available'
+                      ? 'rgba(40, 167, 69, 0.03)'
+                      : location.status === 'low'
+                      ? 'rgba(255, 193, 7, 0.03)'
+                      : 'rgba(220, 53, 69, 0.03)',
                     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                     cursor: 'pointer',
+                    position: 'relative',
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
@@ -475,6 +494,28 @@ const NeighborForm = () => {
                     e.currentTarget.style.boxShadow = 'none'
                   }}
                 >
+                  {/* My Location Badge */}
+                  {isMyLocation && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '15px',
+                        right: '15px',
+                        backgroundColor: '#FFD700',
+                        color: '#002855',
+                        padding: '8px 12px',
+                        borderRadius: '20px',
+                        fontSize: '0.875rem',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                      }}
+                    >
+                      🏢 YOUR LOCATION
+                    </div>
+                  )}
+
                   {/* Header with status badge */}
                   <div
                     style={{
@@ -482,6 +523,7 @@ const NeighborForm = () => {
                       alignItems: 'flex-start',
                       gap: '15px',
                       marginBottom: '20px',
+                      marginTop: isMyLocation ? '25px' : '0',
                     }}
                   >
                     <div
@@ -543,6 +585,78 @@ const NeighborForm = () => {
                     </div>
                   </div>
 
+                  {/* Stock Information for My Location */}
+                  {isMyLocation && (
+                    <div
+                      style={{
+                        backgroundColor: '#fff8e1',
+                        border: '2px solid #FFD700',
+                        borderRadius: '8px',
+                        padding: '15px',
+                        marginBottom: '20px',
+                      }}
+                    >
+                      <h5
+                        style={{
+                          color: '#002855',
+                          fontSize: '1.125rem',
+                          fontWeight: '600',
+                          margin: '0 0 10px 0',
+                        }}
+                      >
+                        📦 Current Stock Levels
+                      </h5>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '15px',
+                        }}
+                      >
+                        <div>
+                          <span
+                            style={{
+                              color: '#6c757d',
+                              fontSize: '0.9rem',
+                              fontWeight: '500',
+                            }}
+                          >
+                            Available Units:
+                          </span>
+                          <div
+                            style={{
+                              color: '#002855',
+                              fontSize: '1.5rem',
+                              fontWeight: '700',
+                            }}
+                          >
+                            {location.available_stock}
+                          </div>
+                        </div>
+                        <div>
+                          <span
+                            style={{
+                              color: '#6c757d',
+                              fontSize: '0.9rem',
+                              fontWeight: '500',
+                            }}
+                          >
+                            Expiring Soon:
+                          </span>
+                          <div
+                            style={{
+                              color: '#dc3545',
+                              fontSize: '1.5rem',
+                              fontWeight: '700',
+                            }}
+                          >
+                            {location.expiring_soon}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Location details */}
                   <div style={{ marginLeft: '51px' }}>
                     <div
@@ -597,7 +711,7 @@ const NeighborForm = () => {
                         display: 'flex',
                         alignItems: 'flex-start',
                         gap: '10px',
-                        marginBottom: location.note ? '14px' : '0',
+                        marginBottom: '14px',
                       }}
                     >
                       <span style={{ fontSize: '1.125rem' }}>🕒</span>
@@ -611,6 +725,73 @@ const NeighborForm = () => {
                         {location.hours}
                       </span>
                     </div>
+
+                    {/* Stock Information for all locations except my location */}
+                    {!isMyLocation && (
+                      <div
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          border: '1px solid #dee2e6',
+                          borderRadius: '6px',
+                          padding: '12px',
+                          marginBottom: location.note ? '14px' : '0',
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '12px',
+                          }}
+                        >
+                          <div>
+                            <span
+                              style={{
+                                color: '#6c757d',
+                                fontSize: '0.875rem',
+                                fontWeight: '500',
+                                display: 'block',
+                              }}
+                            >
+                              📦 Available:
+                            </span>
+                            <div
+                              style={{
+                                color: '#002855',
+                                fontSize: '1.25rem',
+                                fontWeight: '600',
+                              }}
+                            >
+                              {location.available_stock}
+                            </div>
+                          </div>
+                          <div>
+                            <span
+                              style={{
+                                color: '#6c757d',
+                                fontSize: '0.875rem',
+                                fontWeight: '500',
+                                display: 'block',
+                              }}
+                            >
+                              ⚠️ Expiring:
+                            </span>
+                            <div
+                              style={{
+                                color:
+                                  location.expiring_soon > 0
+                                    ? '#dc3545'
+                                    : '#6c757d',
+                                fontSize: '1.25rem',
+                                fontWeight: '600',
+                              }}
+                            >
+                              {location.expiring_soon}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {location.note && (
                       <div
@@ -642,6 +823,7 @@ const NeighborForm = () => {
               )
             })}
           </div>
+
           {/* Emergency Section */}
           <div
             style={{
@@ -728,10 +910,17 @@ const NeighborForm = () => {
               </div>
             </div>
           </div>
+
           {/* Back to form button at bottom */}
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
             <button
-              onClick={() => setShowResults(false)}
+              onClick={() => {
+                setShowResults(false)
+                setSelectedLocationId('')
+                setAvailableStock('')
+                setExpiringSoon('')
+                setMyLocationId(null)
+              }}
               style={{
                 backgroundColor: '#002855',
                 color: 'white',
@@ -744,7 +933,7 @@ const NeighborForm = () => {
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
               }}
             >
-              ← Submit Another Request
+              ← Update Another Location
             </button>
           </div>
         </div>
@@ -779,60 +968,44 @@ const NeighborForm = () => {
             fontWeight: '600',
           }}
         >
-          I need help with...
+          Update Stock Information
         </h1>
 
         <div style={{ marginBottom: '2rem' }}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.875rem',
-                cursor: 'pointer',
-                fontSize: '1.125rem',
-                color: '#002855',
-                fontWeight: '500',
-              }}
-            >
-              <input
-                type='checkbox'
-                checked={needsNarcan}
-                onChange={e => setNeedsNarcan(e.target.checked)}
-                style={{
-                  width: '1.25rem',
-                  height: '1.25rem',
-                  accentColor: '#002855',
-                }}
-              />
-              Accessing free/low-cost Narcan in my community
-            </label>
-          </div>
-          <div>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.875rem',
-                cursor: 'pointer',
-                fontSize: '1.125rem',
-                color: '#002855',
-                fontWeight: '500',
-              }}
-            >
-              <input
-                type='checkbox'
-                checked={needsTraining}
-                onChange={e => setNeedsTraining(e.target.checked)}
-                style={{
-                  width: '1.25rem',
-                  height: '1.25rem',
-                  accentColor: '#002855',
-                }}
-              />
-              Getting Narcan training
-            </label>
-          </div>
+          <label
+            style={{
+              display: 'block',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              color: '#002855',
+              marginBottom: '1rem',
+            }}
+          >
+            Select your location:
+          </label>
+          <select
+            value={selectedLocationId}
+            onChange={e => setSelectedLocationId(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '1rem',
+              fontSize: '1.125rem',
+              border: '2px solid #dee2e6',
+              borderRadius: '6px',
+              backgroundColor: 'white',
+              color: '#002855',
+            }}
+          >
+            <option value=''>Choose your facility...</option>
+            {locations.map(location => (
+              <option key={location.id} value={location.id}>
+                {location.name} -{' '}
+                {location.type === 'training'
+                  ? 'Training Facility'
+                  : 'Distribution Center'}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div style={{ marginBottom: '2rem' }}>
@@ -845,85 +1018,25 @@ const NeighborForm = () => {
               marginBottom: '1rem',
             }}
           >
-            My request is...
+            Available Narcan units:
           </label>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
-          >
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                cursor: 'pointer',
-                fontSize: '1.125rem',
-                color: '#002855',
-                fontWeight: '500',
-              }}
-            >
-              <input
-                type='radio'
-                name='urgency'
-                value='planning-ahead'
-                checked={urgency === 'planning-ahead'}
-                onChange={e => setUrgency(e.target.value)}
-                style={{
-                  width: '1rem',
-                  height: '1rem',
-                  accentColor: '#002855',
-                }}
-              />
-              Planning ahead
-            </label>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer',
-                fontSize: '1.125rem',
-                color: '#002855',
-              }}
-            >
-              <input
-                type='radio'
-                name='urgency'
-                value='needed-soon'
-                checked={urgency === 'needed-soon'}
-                onChange={e => setUrgency(e.target.value)}
-                style={{
-                  width: '1rem',
-                  height: '1rem',
-                  accentColor: '#002855',
-                }}
-              />
-              Needed soon
-            </label>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer',
-                fontSize: '1.125rem',
-                color: '#002855',
-              }}
-            >
-              <input
-                type='radio'
-                name='urgency'
-                value='urgent'
-                checked={urgency === 'urgent'}
-                onChange={e => setUrgency(e.target.value)}
-                style={{
-                  width: '1rem',
-                  height: '1rem',
-                  accentColor: '#002855',
-                }}
-              />
-              Urgent
-            </label>
-          </div>
+          <input
+            type='number'
+            min='0'
+            value={availableStock}
+            onChange={e => setAvailableStock(e.target.value)}
+            placeholder='Enter number of available units'
+            style={{
+              width: '100%',
+              padding: '1rem',
+              fontSize: '1.125rem',
+              border: '2px solid #dee2e6',
+              borderRadius: '6px',
+              backgroundColor: 'white',
+              color: '#002855',
+              boxSizing: 'border-box',
+            }}
+          />
         </div>
 
         <div style={{ marginBottom: '2rem' }}>
@@ -933,14 +1046,17 @@ const NeighborForm = () => {
               fontSize: '1.125rem',
               fontWeight: '500',
               color: '#002855',
-              marginBottom: '0.75rem',
+              marginBottom: '1rem',
             }}
           >
-            Your area:
+            Units expiring soon:
           </label>
-          <select
-            value={zipCode}
-            onChange={e => setZipCode(e.target.value)}
+          <input
+            type='number'
+            min='0'
+            value={expiringSoon}
+            onChange={e => setExpiringSoon(e.target.value)}
+            placeholder='Enter number of units expiring soon'
             style={{
               width: '100%',
               padding: '1rem',
@@ -949,14 +1065,9 @@ const NeighborForm = () => {
               borderRadius: '6px',
               backgroundColor: 'white',
               color: '#002855',
+              boxSizing: 'border-box',
             }}
-          >
-            {zipOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         {/* Error message */}
@@ -979,17 +1090,17 @@ const NeighborForm = () => {
         <button
           onClick={handleSubmit}
           disabled={
-            !(needsNarcan || needsTraining) ||
-            !urgency ||
-            !zipCode ||
+            !selectedLocationId ||
+            availableStock === '' ||
+            expiringSoon === '' ||
             isSubmitting
           }
           style={{
             width: '100%',
             backgroundColor:
-              (needsNarcan || needsTraining) &&
-              urgency &&
-              zipCode &&
+              selectedLocationId &&
+              availableStock !== '' &&
+              expiringSoon !== '' &&
               !isSubmitting
                 ? '#002855'
                 : '#6c757d',
@@ -1000,20 +1111,20 @@ const NeighborForm = () => {
             fontSize: '1.125rem',
             fontWeight: '500',
             cursor:
-              (needsNarcan || needsTraining) &&
-              urgency &&
-              zipCode &&
+              selectedLocationId &&
+              availableStock !== '' &&
+              expiringSoon !== '' &&
               !isSubmitting
                 ? 'pointer'
                 : 'not-allowed',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           }}
         >
-          {isSubmitting ? 'Saving...' : 'Find Available Resources'}
+          {isSubmitting ? 'Updating...' : 'Update Stock Information'}
         </button>
       </div>
     </div>
   )
 }
 
-export default NeighborForm;
+export default CommunityForm;
