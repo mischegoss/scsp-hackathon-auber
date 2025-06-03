@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const fetch = require('node-fetch')
 require('dotenv').config()
 
 const app = express()
@@ -318,7 +319,7 @@ Provide a direct, helpful answer in 2-4 sentences.`
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3-sonnet-20240229',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 400,
         messages: [
           {
