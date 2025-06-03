@@ -1410,4 +1410,4 @@ const NarcanDashboard = () => {
   )
 }
 
-export default NarcanDashboard
+export default NarcanDashboard;
