@@ -14,7 +14,6 @@ const AskClaudeData = ({ currentData }) => {
     'What counts as an overdose death in this data?',
     'Who gets counted in EMS narcan administered?',
     'What do the urgency levels mean?',
-    'What is our help not surveillance approach?',
     'How many overdose deaths do we have this week?',
     'Which locations are out of stock?',
     'What areas have the highest urgency requests?',
@@ -124,7 +123,7 @@ const AskClaudeData = ({ currentData }) => {
           }}
         >
           Ask questions about the current dashboard data. Claude will only
-          reference information shown above.
+          reference the knowledge base and official data.
         </p>
       </div>
 
@@ -726,7 +725,7 @@ const NarcanDashboard = () => {
                 margin: 0,
               }}
             >
-              Real-time community resource monitoring and AI-powered insights
+              Designed for real-time response. Powered by community data and AI.
             </p>
             <p
               style={{
@@ -1411,4 +1410,4 @@ const NarcanDashboard = () => {
   )
 }
 
-export default NarcanDashboard;
+export default NarcanDashboard

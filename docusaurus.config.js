@@ -11,7 +11,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Narcan Connect',
-  tagline:  'Help not Surveillance',
+  tagline: 'Built to Serve West Virginians. Driven by Data and AI',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -61,57 +61,38 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'Narcan Connect',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo.png',
         },
         items: [
           // Removed Tutorial and Blog navigation items
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            href: '/neighbor-connect',
+            label: 'Neighbor Connect',
+            position: 'right',
+          },
+          {
+            href: '/provider-connect',
+            label: 'Provider Connect',
+            position: 'right',
+          },
+          {
+            href: '/data-connect',
+            label: 'Data Connect',
             position: 'right',
           },
         ],
       },
       footer: {
         style: 'dark',
-        links: [
-          // Removed Docs section with Tutorial link
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'X',
-                href: 'https://x.com/docusaurus',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              // Removed Blog link
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+
+        copyright: `Copyright © ${new Date().getFullYear()}.`,
       },
       prism: {
         theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
+        darkTheme: prismThemes.github,
       },
     }),
 }
