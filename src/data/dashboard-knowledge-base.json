@@ -1,0 +1,117 @@
+{
+  "metrics": {
+    "overdose_deaths": {
+      "definition": "Confirmed fatalities directly attributed to drug overdoses within the reporting period",
+      "who_gets_counted": "Deaths where overdose is listed as primary or contributing cause of death on death certificate",
+      "data_source": "County coroner reports and state vital statistics",
+      "reporting_timeframe": "Updated weekly based on confirmed cases",
+      "limitations": "May have 1-2 week delay due to toxicology confirmation requirements"
+    },
+    "ems_narcan_administered": {
+      "definition": "Number of times Emergency Medical Services personnel administered naloxone (Narcan) to individuals experiencing suspected overdoses",
+      "who_gets_counted": "All EMS-documented naloxone administrations, regardless of outcome",
+      "data_source": "EMS incident reports and dispatch records",
+      "reporting_timeframe": "Real-time reporting from EMS dispatch systems",
+      "limitations": "Does not include community-administered naloxone or self-administered doses"
+    },
+    "community_requests": {
+      "definition": "Requests from community members for naloxone kits, training, or distribution services",
+      "who_gets_counted": "Individual requests through community portals, phone calls, or in-person requests",
+      "data_source": "Community outreach forms, distribution center logs, and helpline records",
+      "reporting_timeframe": "Updated daily from all community touchpoints",
+      "limitations": "May include duplicate requests from same household; anonymous requests not tracked"
+    },
+    "training_requests": {
+      "definition": "Requests for naloxone administration training sessions or educational materials",
+      "who_gets_counted": "Individual requests for training, group training sessions, and educational material requests",
+      "data_source": "Training center registrations, community health worker reports, and educational outreach logs",
+      "reporting_timeframe": "Updated daily from training providers",
+      "limitations": "Does not track completion rates or effectiveness of training"
+    }
+  },
+  "locations": {
+    "distribution_centers": {
+      "definition": "Physical locations where community members can obtain free naloxone kits",
+      "status_types": {
+        "available": "Adequately stocked with naloxone kits and operational during posted hours",
+        "low": "Stock levels below recommended thresholds (typically <5 kits remaining)",
+        "out": "No naloxone kits currently available for distribution"
+      },
+      "stock_tracking": "Real-time inventory updates from distribution partners",
+      "expiration_monitoring": "Kits tracked for expiration dates; 'expiring soon' = within 60 days"
+    },
+    "training_facilities": {
+      "definition": "Locations offering hands-on naloxone administration training and certification",
+      "types": "Hospitals, EMS stations, community centers, and mobile training units",
+      "availability": "Scheduled sessions and walk-in training opportunities",
+      "certification": "Participants receive training completion certificates valid for 2 years"
+    }
+  },
+  "geographic": {
+    "zip_codes": {
+      "26003": "Wheeling, WV - Urban center with multiple healthcare facilities",
+      "26060": "Valley Grove, WV - Rural community with limited healthcare access",
+      "26074": "Triadelphia, WV - Suburban area between Wheeling and Moundsville",
+      "26059": "Pine Grove, WV - Rural area with significant geographic barriers to services"
+    },
+    "coverage_gaps": {
+      "definition": "Geographic areas where residents have limited access to naloxone distribution or training",
+      "measurement": "Areas more than 15 minutes drive time from nearest distribution center",
+      "rural_challenges": "Limited transportation, irregular hours, and weather-related access issues"
+    }
+  },
+  "alerts": {
+    "alert_types": {
+      "critical": "Immediate action required - public safety risk identified",
+      "warning": "Concerning trend requiring attention within 24-48 hours",
+      "info": "Routine notification for awareness and monitoring"
+    },
+    "stock_depletion_crisis": {
+      "definition": "When 50% or more of distribution centers in a coverage area are out of stock or at low levels",
+      "triggers": "Automatic alert when supply chain disruption affects community access",
+      "response_protocol": "Emergency restocking procedures and alternative distribution activation"
+    },
+    "geographic_coverage_gap": {
+      "definition": "When a zip code area has no accessible distribution points within reasonable travel distance",
+      "measurement": "Areas where nearest available center is >20 minutes drive time",
+      "response_options": "Mobile distribution, temporary sites, or community partner activation"
+    }
+  },
+  "urgency_levels": {
+    "1": "Low priority - routine need with flexible timeline",
+    "2": "Moderate priority - need within 48 hours",
+    "3": "Standard priority - need within 24 hours",
+    "4": "High priority - need within 12 hours",
+    "5": "Critical priority - immediate need, potential emergency situation"
+  },
+  "program_principles": {
+    "help_not_surveillance": {
+      "definition": "Data collection focuses on resource allocation and community support, not enforcement or monitoring individuals",
+      "implementation": "No personal identifying information collected; aggregate data only",
+      "community_trust": "Transparent data use policies that prioritize community safety over punitive measures"
+    },
+    "community_empowerment": {
+      "definition": "Putting naloxone directly in the hands of community members who can respond within critical 5-7 minute window",
+      "rationale": "Rural EMS response times often exceed the critical window for overdose reversal",
+      "approach": "Train community members, family members, and local first responders"
+    },
+    "evidence_based_decisions": {
+      "definition": "Using real-time data to guide resource allocation and policy decisions",
+      "data_sources": "Community requests, distribution patterns, EMS usage, and outcome tracking",
+      "decision_making": "Weekly data reviews to adjust distribution strategies and resource allocation"
+    }
+  },
+  "context": {
+    "rural_challenges": {
+      "ems_response_times": "Average 5-7 minutes in rural areas, often longer due to distance and terrain",
+      "overdose_reversal_window": "Naloxone most effective when administered within 2-5 minutes of overdose",
+      "transportation_barriers": "Limited public transit and geographic distances to services",
+      "stigma_concerns": "Rural communities may have increased stigma around addiction and treatment"
+    },
+    "west_virginia_context": {
+      "overdose_rates": "West Virginia has among the highest overdose death rates in the United States",
+      "rural_population": "Significant rural population with unique healthcare access challenges",
+      "economic_factors": "Economic challenges affecting both individual access and public health funding"
+    }
+  }
+}
