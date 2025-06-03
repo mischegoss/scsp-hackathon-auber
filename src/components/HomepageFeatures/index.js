@@ -5,24 +5,23 @@ import styles from './styles.module.css'
 
 const FeatureList = [
   {
-    title: 'Neighborhood Connect - Get Narcan',
+    title: 'Neighbor Connect - Resources to Keep Family and Neighbors Safe',
     Image: require('@site/static/img/neighbor.png').default,
     link: '/neighbor-connect',
     description: (
       <>
-        Find free or low-cost Narcan for your home and learn how to use it to
+        Find free or low-cost Narcan and learn how to use it to
         keep your family and your neighbors safe.
       </>
     ),
   },
   {
-    title: 'Community Connect - Provider Resources',
+    title: 'Provider Connect - Get Connected and Track Narcan Supplies',
     Image: require('@site/static/img/community.png').default,
     link: '/',
     description: (
       <>
-        Organizations can request Narcan supplies, report distribution needs,
-        and coordinate training for their communities.
+        Track Narcan supplies and view other providers in the area to ensure Narcan gets where is is needed the most.
       </>
     ),
   },
@@ -32,8 +31,8 @@ const FeatureList = [
     link: '/',
     description: (
       <>
-        Data-driven insights help public health leaders make smarter decisions
-        about Narcan distribution and resource allocation.
+        Discover the data-driven insights to make smarter decisions
+        about Narcan distribution and resource allocation in your county.
       </>
     ),
   },

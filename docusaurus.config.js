@@ -11,7 +11,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Narcan Connect',
-  tagline:  'Help not Surveillance',
+  tagline: 'Built to Serve West Virginians. Driven by Data and AI',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -69,8 +69,18 @@ const config = {
         items: [
           // Removed Tutorial and Blog navigation items
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            href: '/neighbor-connect',
+            label: 'Neighbor Connect',
+            position: 'right',
+          },
+          {
+            href: '/provider-connect',
+            label: 'Provider Connect',
+            position: 'right',
+          },
+          {
+            href: '/data-connect',
+            label: 'Data Connect',
             position: 'right',
           },
         ],
@@ -116,4 +126,4 @@ const config = {
     }),
 }
 
-export default config;
+export default config
