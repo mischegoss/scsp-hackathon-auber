@@ -390,4 +390,4 @@ app.listen(PORT, () => {
   console.log(`Claude API key configured: ${!!process.env.CLAUDE_API_KEY}`)
 })
 
-module.exports = app
+module.exports = app;

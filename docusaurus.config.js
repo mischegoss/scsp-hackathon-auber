@@ -11,7 +11,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Narcan Connect',
-  tagline: 'Built to Serve West Virginians. Driven by Data and AI',
+  tagline: 'A practical solution built for humans, powered by data and AI',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -97,4 +97,4 @@ const config = {
     }),
 }
 
-export default config;
+export default config
